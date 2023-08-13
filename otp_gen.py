@@ -139,7 +139,7 @@ if __name__ == "__main__":
                     print(f"Next OTP    : {totp_generate(key_b, timestep+1):06d}")
             else:
                 time_left -= 1
-            print(f"\rTime left: {time_left:02d}")
+            print(f"\n\rTime left: {time_left:02d}")
             sleep(1)
 
     except KeyboardInterrupt:
