@@ -1,1 +1,7 @@
 __pycache__/
+.private_tests/
+keys/
+
+# IDE-specific
+.idea/
+.venv/
