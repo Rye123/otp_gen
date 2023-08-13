@@ -3,7 +3,7 @@ from util import create_key_file
 from base64 import b32decode
 from binascii import Error as BinAsciiError
 
-KEYDIR = Path("./keys")
+KEYDIR = Path(__file__).parent.joinpath("keys")
 
 if __name__ == "__main__":
     KEYDIR.mkdir(exist_ok=True)

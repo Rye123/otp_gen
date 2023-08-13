@@ -6,7 +6,7 @@ from pathlib import Path
 from util import parse_key_dir
 from base64 import b32decode
 
-KEYDIR = Path("./keys")
+KEYDIR = Path(__file__).parent.joinpath("keys")
 
 def get_current_timestep() -> int:
     """
