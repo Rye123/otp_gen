@@ -1,21 +1,38 @@
-from hashlib import sha1
 import hmac
-import time
+from time import time, sleep, asctime, localtime
 from math import floor
+from hashlib import sha1
+from base64 import b32decode
 from pathlib import Path
 from util import parse_key_dir
-from base64 import b32decode
+
 from getpass import getpass
+from os import system as osystem
+from platform import system as psystem
 
 KEYDIR = Path(__file__).parent.joinpath("keys")
+TIME_STEP = 30  # timestep in seconds
 
-def get_current_timestep() -> int:
+
+def clear_screen():
+    if psystem() == "Windows":
+        osystem("cls")
+    else:
+        osystem("clear")
+
+
+def get_timestep(seconds_since_epoch: float = time()) -> int:
     """
-    Gets the current timestep.
+    Gets the timestep for the given time
     """
-    T0 = 0
-    TIME_STEP = 30  # time step in seconds
-    return floor((time.time() - T0) / TIME_STEP)
+    return floor(seconds_since_epoch / TIME_STEP)
+
+
+def get_time_left(seconds_since_epoch: float = time()) -> int:
+    """
+    Gets the number of seconds left in this time step
+    """
+    return TIME_STEP - int(seconds_since_epoch % TIME_STEP)
 
 
 def truncate(value: bytes, digits: int = 6) -> int:
@@ -92,13 +109,11 @@ def totp_generate(setupkey: bytes, t: int, digits: int = 6):
 
 
 def get_totp(setupkey: bytes):
-    return totp_generate(setupkey, get_current_timestep())
+    return totp_generate(setupkey, get_timestep())
 
 
 if __name__ == "__main__":
     time_step = 30
-    prev_step = 0
-    epoch_time = 0
 
     # Load keys
     pin = getpass("Enter PIN: ")
@@ -109,18 +124,23 @@ if __name__ == "__main__":
 
     try:
         while True:
-            cur_step = get_current_timestep()
-            if prev_step < cur_step:
-                prev_step = cur_step
-                time_str = time.asctime(time.localtime(time.time()))
-                timestep = get_current_timestep()
+            clear_screen()
+            t = time()
+            timestep = get_timestep(t)
+            time_left = 0
 
-                print(f"Time: {time_str}")
+            if time_left == 0:
+                time_left = get_time_left(t)
                 for label, key in keys.items():
                     key_b = b32decode(key)
                     print(f"---{label}---")
                     print(f"Previous OTP: {totp_generate(key_b, timestep-1):06d}")
                     print(f"Current OTP : {totp_generate(key_b, timestep):06d}")
                     print(f"Next OTP    : {totp_generate(key_b, timestep+1):06d}")
+            else:
+                time_left -= 1
+            print(f"\n\rTime left: {time_left:02d}")
+            sleep(1)
+
     except KeyboardInterrupt:
         print("\nProgram Ended.")
