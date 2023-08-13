@@ -9,6 +9,7 @@ from util import parse_key_dir
 from getpass import getpass
 from os import system as osystem
 from platform import system as psystem
+from sys import stdout
 
 KEYDIR = Path(__file__).parent.joinpath("keys")
 TIME_STEP = 30  # timestep in seconds
@@ -123,23 +124,24 @@ if __name__ == "__main__":
         exit(1)
 
     try:
+        time_left = 0
         while True:
-            clear_screen()
-            t = time()
-            timestep = get_timestep(t)
-            time_left = 0
-
-            if time_left == 0:
+            if time_left <= 0:
+                clear_screen()
+                t = time()
                 time_left = get_time_left(t)
+                timestep = get_timestep(t)
                 for label, key in keys.items():
                     key_b = b32decode(key)
                     print(f"---{label}---")
                     print(f"Previous OTP: {totp_generate(key_b, timestep-1):06d}")
                     print(f"Current OTP : {totp_generate(key_b, timestep):06d}")
                     print(f"Next OTP    : {totp_generate(key_b, timestep+1):06d}")
+                    print()
             else:
                 time_left -= 1
-            print(f"\n\rTime left: {time_left:02d}")
+            stdout.write(f"\rTime left: {time_left:02d}")
+            stdout.flush()
             sleep(1)
 
     except KeyboardInterrupt:
