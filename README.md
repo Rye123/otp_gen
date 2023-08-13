@@ -6,6 +6,12 @@ A one-time password generator.
 Modern OTPs are generated from a fixed, constant *setup key*. `otp_gen` stores that setup key, encrypting it with a user-defined passcode and decrypting it where necessary.
 - The actual OTP is then generated based on the current timestamp (most implementations have 30-second interval timestamps) and the setup key.
 
+## Installation
+Install the required dependencies with:
+```commandline
+pip install -r requirements.txt
+```
+
 ## Usage
 
 ### Adding a Setup Key
@@ -25,7 +31,7 @@ This will prompt you for:
       - The setup key can be manually extracted from that URI.
     - Obtaining the setup key directly:
       1. If using Google, click "Can't scan it?" when setting up the authenticator app.
-      2. The setup key will be the given security key in step 2 **without spaces**.
+      2. The setup key will be the given security key in step 2.
         ![Google Auth Example](google_auth_example.png)
 
 **Example**:    
