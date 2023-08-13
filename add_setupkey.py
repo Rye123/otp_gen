@@ -2,6 +2,7 @@ from pathlib import Path
 from util import create_key_file
 from base64 import b32decode
 from binascii import Error as BinAsciiError
+from getpass import getpass
 
 KEYDIR = Path(__file__).parent.joinpath("keys")
 
@@ -22,8 +23,18 @@ if __name__ == "__main__":
 
     print("Enter a PIN to be associated with this setup key. This CAN be unique for each setup key, but it's easier "
           "if you keep it the same.")
-    pin = input("PIN: ")
+    pin_accepted = False
+    pin = 0000
 
-    create_key_file(pin, label, setupkey)
+    while not pin_accepted:
+        pin = getpass("PIN: ")
+        pin_r = getpass("Repeat PIN: ")
+        if pin == pin_r:
+            pin_accepted = True
+        else:
+            print("PINs don't match, try again.")
+
+    keyfile = create_key_file(pin, label, setupkey)
+    print(f"Keyfile created at: {str(keyfile)}")
 
 

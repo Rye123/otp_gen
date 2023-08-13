@@ -5,6 +5,7 @@ from math import floor
 from pathlib import Path
 from util import parse_key_dir
 from base64 import b32decode
+from getpass import getpass
 
 KEYDIR = Path(__file__).parent.joinpath("keys")
 
@@ -100,7 +101,7 @@ if __name__ == "__main__":
     epoch_time = 0
 
     # Load keys
-    pin = input("Enter PIN: ")
+    pin = getpass("Enter PIN: ")
     keys = parse_key_dir(pin)
     if len(keys) == 0:
         print("No keys detected.")
