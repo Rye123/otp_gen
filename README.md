@@ -35,6 +35,7 @@ This will prompt you for:
         ![Google Auth Example](google_auth_example.png)
 
 **Example**:    
+(Note: The actual PIN will not be visible)    
 ![add_setupkey Example](add_setupkey_example.png)
 
 ### Requesting an OTP
@@ -45,4 +46,5 @@ python otp_gen.py
 This will prompt you for the PIN, and will output all OTPs for the previous, current and next time interval associated with the PIN.
 
 **Example**:    
+(Note: The actual PIN will not be visible)    
 ![otp_gen Example](otp_gen_example.png)
