@@ -11,7 +11,9 @@ if __name__ == "__main__":
         raise Exception("Ensure ./keys is a directory.")
 
     label = input("Enter the label to be associated with the key: ")
-    setupkey = input("Enter the setup key (no spaces): ").upper()
+    setupkey = input("Enter the setup key: ").upper()
+    if ' ' in setupkey:
+        setupkey = ''.join(setupkey.split(' '))
 
     try:
         b32decode(setupkey)
