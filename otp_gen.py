@@ -1,5 +1,6 @@
 import hmac
-from time import time, sleep, asctime, localtime
+import pyperclip
+from time import time, sleep
 from math import floor
 from hashlib import sha1
 from base64 import b32decode
@@ -10,6 +11,7 @@ from getpass import getpass
 from os import system as osystem
 from platform import system as psystem
 from sys import stdout
+from typing import Dict
 
 KEYDIR = Path(__file__).parent.joinpath("keys")
 TIME_STEP = 30  # timestep in seconds
@@ -123,6 +125,27 @@ if __name__ == "__main__":
         print("No keys detected.")
         exit(1)
 
+    # Select label to view
+    print("Labels:")
+    mapping: Dict[int, str] = {}
+    counter = 1
+    for label in keys.keys():
+        print(f"{counter}: {label}")
+        mapping[counter] = label
+        counter += 1
+
+    chosen_label_num = -1
+    while chosen_label_num not in mapping.keys():
+        val = input("Select label (by number):")
+        try:
+            val = int(val)
+        except ValueError:
+            continue
+        chosen_label_num = val
+
+    # Start displaying the code
+    label = mapping[chosen_label_num]
+    key_b = b32decode(keys[label])
     try:
         time_left = 0
         while True:
@@ -131,13 +154,10 @@ if __name__ == "__main__":
                 t = time()
                 time_left = get_time_left(t)
                 timestep = get_timestep(t)
-                for label, key in keys.items():
-                    key_b = b32decode(key)
-                    print(f"---{label}---")
-                    print(f"Previous OTP: {totp_generate(key_b, timestep-1):06d}")
-                    print(f"Current OTP : {totp_generate(key_b, timestep):06d}")
-                    print(f"Next OTP    : {totp_generate(key_b, timestep+1):06d}")
-                    print()
+                otp = f"{totp_generate(key_b, timestep):06d}"
+                print(f"{label}: {otp}")
+                print()
+                pyperclip.copy(otp)
             else:
                 time_left -= 1
             stdout.write(f"\rTime left: {time_left:02d}")

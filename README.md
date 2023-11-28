@@ -1,10 +1,12 @@
-# otp_gen
+# otp_gen (clipboard variant)
 
 A one-time password generator.
 
-
 Modern OTPs are generated from a fixed, constant *setup key*. `otp_gen` stores that setup key, encrypting it with a user-defined passcode and decrypting it where necessary.
 - The actual OTP is then generated based on the current timestamp (most implementations have 30-second interval timestamps) and the setup key.
+
+This version prompts you first for the label of the OTP to obtain, then displays **only** the OTP for that label. 
+For convenience, this OTP is also copied to the clipboard. This allows for an entirely keyboard-driven workflow -- enter the code and the number for the label, and the OTP is automatically saved in the clipboard for pasting.
 
 ## Installation
 Install the required dependencies with:
